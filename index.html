@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>高品質讀書會 | 典藏影音庫</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+TC:wght@300;500;700&family=Playfair+Display:ital@0;1&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --gold: #D4AF37;
+      --gold-glow: rgba(212, 175, 55, 0.4);
+      --bg-dark: #09090b;
+      --card-bg: rgba(20, 20, 20, 0.6);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --text-main: #F5F5F5;
+      --text-sub: #A3A3A3;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Noto Serif TC', serif;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* --- 背景星空動畫 Canvas --- */
+    #canvas-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+    }
+
+    /* --- 核心精神區 (Quote) --- */
+    .hero-section {
+      min-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 2rem;
+      position: relative;
+    }
+
+    .main-title {
+      font-family: 'Cinzel', serif;
+      font-size: 3.5rem;
+      color: var(--gold);
+      text-shadow: 0 0 20px var(--gold-glow);
+      margin-bottom: 3rem;
+      letter-spacing: 0.2em;
+      animation: fadeIn Down 1s ease-out;
+    }
+
+    .quote-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--gold);
+      padding: 3rem;
+      max-width: 800px;
+      position: relative;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      animation: slideUp 1.2s ease-out;
+    }
+
+    .quote-card::before {
+      content: '❝';
+      position: absolute;
+      top: -30px;
+      left: 20px;
+      font-size: 6rem;
+      color: var(--gold);
+      opacity: 0.3;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .quote-text {
+      font-size: 1.25rem;
+      color: #e0e0e0;
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+
+    .quote-highlight {
+      color: var(--gold);
+      font-weight: 700;
+      border-bottom: 1px dashed var(--gold);
+    }
+
+    .quote-book {
+      text-align: right;
+      font-style: italic;
+      color: var(--text-sub);
+      margin-top: 1rem;
+    }
+
+    /* --- 生日專區 --- */
+    .birthdays-container {
+      max-width: 1200px;
+      margin: 0 auto 4rem;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .section-header {
+      font-size: 1.8rem;
+      color: var(--gold);
+      margin-bottom: 2rem;
+      display: inline-block;
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 0.5rem;
+      font-family: 'Cinzel', serif;
+    }
+
+    .birthday-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .birthday-card {
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
+      border: 1px solid var(--glass-border);
+      padding: 1.5rem;
+      border-radius: 12px;
+      transition: 0.3s;
+    }
+
+    .birthday-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-5px);
+      box-shadow: 0 5px 20px var(--gold-glow);
+    }
+
+    .b-name {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .b-date {
+      color: var(--gold);
+      font-family: 'Cinzel', serif;
+      margin-top: 5px;
+    }
+
+    /* --- 影片列表區 --- */
+    .timeline-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 20px 100px;
+      position: relative;
+    }
+
+    .year-separator {
+      text-align: center;
+      margin: 80px 0 40px;
+      position: relative;
+    }
+
+    .year-text {
+      font-size: 4rem;
+      font-weight: bold;
+      color: rgba(255, 255, 255, 0.05);
+      -webkit-text-stroke: 1px var(--gold);
+      font-family: 'Cinzel', serif;
+    }
+
+    .video-card {
+      display: flex;
+      flex-direction: column;
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 40px;
+      transition: all 0.4s ease;
+      position: relative;
+    }
+
+    @media(min-width: 768px) {
+      .video-card {
+        flex-direction: row;
+        height: 280px;
+      }
+    }
+
+    .video-card:hover {
+      border-color: rgba(212, 175, 55, 0.5);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    /* 特殊卡片樣式：年度總結 / 生日場 */
+    .card-special {
+      border: 1px solid var(--gold);
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
+    }
+
+    .video-wrapper {
+      flex: 1;
+      min-height: 200px;
+      position: relative;
+    }
+
+    .video-wrapper iframe {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .content-wrapper {
+      flex: 1;
+      padding: 25px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .v-date {
+      color: var(--gold);
+      font-family: 'Cinzel', serif;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+    }
+
+    .v-title {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      color: #fff;
+      line-height: 1.3;
+    }
+
+    .v-desc {
+      font-size: 0.95rem;
+      color: #aaa;
+      margin-bottom: 15px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .v-tag {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      margin-right: 5px;
+    }
+
+    .tag-summary {
+      background: var(--gold);
+      color: #000;
+    }
+
+    .tag-bday {
+      background: #E91E63;
+      color: #fff;
+    }
+
+    .tag-normal {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ccc;
+    }
+
+    /* 動畫 Keyframes */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* 手機適配 */
+    @media (max-width: 768px) {
+      .main-title {
+        font-size: 2.2rem;
+      }
+
+      .quote-card {
+        padding: 1.5rem;
+      }
+
+      .quote-text {
+        font-size: 1rem;
+      }
+
+      .year-text {
+        font-size: 3rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="canvas-bg"></canvas>
+
+  <section class="hero-section">
+    <h1 class="main-title">Premium Book Club ⭐</h1>
+    <div class="quote-card">
+      <p class="quote-text">
+        買書不是買這本書的知識，你買的是<span class="quote-highlight">讀這本書的概率</span>。<br>
+        買了是 1%，不買是 0。
+      </p>
+      <p class="quote-text">
+        只要家裡 1000 本書裡讀了 10 本，光那些知識就回本了!<br>
+        如果都不買，完了，你的認知就停在這裡。
+      </p>
+      <p class="quote-text">
+        所以<span class="quote-highlight">在不讀書都得買書</span>，看個書名都對你有幫助 Oh man~
+      </p>
+      <p class="quote-book">—— 比如《被討厭的勇氣》</p>
+    </div>
+  </section>
+
+  <section class="birthdays-container">
+    <h2 class="section-header">🎂 讀書會成員生日 🎂</h2>
+    <div class="birthday-grid">
+      <div class="birthday-card">
+        <div class="b-name">阿如</div>
+        <div class="b-date">Feb 10</div>
+      </div>
+      <div class="birthday-card">
+        <div class="b-name">志朋</div>
+        <div class="b-date">May 21</div>
+      </div>
+      <div class="birthday-card" style="border-color: #E91E63; box-shadow: 0 0 10px rgba(233,30,99,0.3);">
+        <div class="b-name">金樹 (Ryan)</div>
+        <div class="b-date">Jul 30</div>
+      </div>
+      <div class="birthday-card">
+        <div class="b-name">肯特</div>
+        <div class="b-date">Nov 21</div>
+      </div>
+    </div>
+  </section>
+
+  <div id="timeline" class="timeline-container">
+  </div>
+
+  <script>
+    // ================= 資料庫 =================
+    // 我已幫您提煉了每部影片的「一句話形容」，讓畫面更豐富。
+    // 您可以隨時修改 'desc' 欄位的文字。
+    const videos = [
+      { date: '2024-12-14', type: 'list', id: 'PLtb0PhW5ohcUKP8HWwwY4b98ApRSPvyeq', title: '高品質讀書會：啟程', desc: '探索未知的知識領域，重新定義閱讀的意義，為我們的成長之旅揭開序幕。' },
+      { date: '2025-01-18', type: 'list', id: 'PLtb0PhW5ohcU5rNTnr8iBqWUT0P3b5ai_', title: '高品質讀書會：一月號', desc: '新的一年，從重塑原子習慣開始，探討如何在細微處建立巨大的影響力。' },
+      { date: '2025-02-22', type: 'list', id: 'PLtb0PhW5ohcXq1QMCPvVNRNolBml7KF_v', title: '高品質讀書會：二月號', desc: '剖析人際關係的本質，學習被討厭的勇氣，找回內心真正的自由。' },
+      { date: '2025-03-22', type: 'list', id: 'PLtb0PhW5ohcW8f7bqQIHHAo-uPINafUur', title: '高品質讀書會：三月號', desc: '內心成長與詐騙心裡的探索，曖昧與自律神經的深度理解。' },
+      { date: '2025-04-20', type: 'list', id: 'PLtb0PhW5ohcXGvkdI9K4KHyCVKE35erw0', title: '高品質讀書會：四月號', desc: '在資訊爆炸的時代，如何培養深度工作的能力，重掌注意力的主導權。' },
+      { date: '2025-05-17', type: 'video', id: 'fCRIOOFTEzk', title: '高品質讀書會：五月特輯', desc: '一場關於心智與邏輯的深度對話，挑戰既有思維，看見不同的世界觀。' },
+      { date: '2025-06-28', type: 'list', id: 'PLtb0PhW5ohcUtNcNzVKBvtPaPkNCZhswt', title: '高品質讀書會：六月號', desc: '探討商業模式的創新與底層邏輯，為個人職涯與投資注入新的洞見。' },
+      { date: '2025-07-30', type: 'list', id: 'PLtb0PhW5ohcVV0SLFvK2cw-CVbsiA137_', title: 'Ryan 生日特別場 (線上純享)', desc: '金樹生日快樂！一場結合慶祝與知識分享的特別聚會，紀錄我們共同的成長回憶。', isBirthday: true },
+      { date: '2025-08-27', type: 'list', id: 'PLDI0JBC8K0vQTFB5arTEwl8XikrY_qNiv', title: '高品質讀書會：八月號', desc: '炎炎夏日中的冷靜思考，透過閱讀歷史與哲學，尋找現代生活的解答。' },
+      { date: '2025-10-27', type: 'list', id: 'PLDI0JBC8K0vTDSkjkkyu0xACDjrcjJGz0', title: '高品質讀書會：十月號', desc: '秋季的知識收穫，專注於心理學與自我提升，挖掘潛意識的力量。' },
+      { date: '2025-11-26', type: 'list', id: 'PLDI0JBC8K0vThUP6XcHTLxbHNSDzjlyV-', title: '高品質讀書會：十一月號', desc: '關於財富自由的真諦，不只是金錢的積累，更是生活選擇權的擴大。' },
+      { date: '2025-12-28', type: 'list', id: 'PLtb0PhW5ohcVo3EoYExZAxZuCbyK967wv', title: '2025 年度大總結', desc: '回首這一年，我們讀過了什麼？改變了什麼？一場含金量最高的年度復盤大會。', isSummary: true },
+      { date: '2026-01-25', type: 'list', id: 'PLtb0PhW5ohcUpojNZU-iqO6rRnAM77RDB', title: '高品質讀書會：2026 開年', desc: '展望 2026，設定全新目標，用系統化思維構建未來的成功藍圖。' }
+    ];
+
+    // ================= 渲染邏輯 =================
+    const timeline = document.getElementById('timeline');
+
+    // 1. 確保照日期排序
+    videos.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    // 2. 按年份分組渲染
+    let currentYear = '';
+
+    videos.forEach(v => {
+      const videoYear = v.date.split('-')[0];
+      const videoDate = v.date.replace(/-/g, ' / ');
+
+      // 如果年份改變，插入年份標題
+      if (videoYear !== currentYear) {
+        currentYear = videoYear;
+        const yearDiv = document.createElement('div');
+        yearDiv.className = 'year-separator';
+        yearDiv.innerHTML = `<div class="year-text">${currentYear}</div>`;
+        timeline.appendChild(yearDiv);
+      }
+
+      // 處理標籤與特殊樣式
+      let tags = '';
+      let specialClass = '';
+
+      if (v.isSummary) {
+        tags += `<span class="v-tag tag-summary">🏆 年度大總結</span>`;
+        specialClass = 'card-special';
+      } else if (v.isBirthday) {
+        tags += `<span class="v-tag tag-bday">🎂 Ryan 生日場</span>`;
+        specialClass = 'card-special';
+      } else {
+        tags += `<span class="v-tag tag-normal">Book Club</span>`;
+      }
+
+      // 處理影片連結 (Playlists vs Single Video)
+      const embedUrl = v.type === 'video'
+        ? `https://www.youtube.com/embed/${v.id}`
+        : `https://www.youtube.com/embed/videoseries?list=${v.id}`;
+
+      // 建立卡片
+      const card = document.createElement('div');
+      card.className = `video-card ${specialClass}`;
+      card.innerHTML = `
+                <div class="video-wrapper">
+                    <iframe src="${embedUrl}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="content-wrapper">
+                    <div class="v-date">${videoDate}</div>
+                    <h3 class="v-title">${v.title}</h3>
+                    <p class="v-desc">${v.desc}</p>
+                    <div style="margin-top:auto;">${tags}</div>
+                </div>
+            `;
+      timeline.appendChild(card);
+    });
+
+    // ================= 背景動畫 (星空) =================
+    const canvas = document.getElementById('canvas-bg');
+    const ctx = canvas.getContext('2d');
+    let w, h, stars = [];
+
+    function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+
+    class Star {
+      constructor() {
+        this.x = Math.random() * w;
+        this.y = Math.random() * h;
+        this.size = Math.random() * 1.5;
+        this.speed = Math.random() * 0.5;
+      }
+      update() {
+        this.y -= this.speed;
+        if (this.y < 0) this.y = h;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function initStars() { stars = Array(100).fill().map(() => new Star()); }
+    function animate() {
+      ctx.clearRect(0, 0, w, h);
+      stars.forEach(s => s.update());
+      requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('resize', () => { resize(); initStars(); });
+    resize(); initStars(); animate();
+  </script>
+</body>
+
+</html>
