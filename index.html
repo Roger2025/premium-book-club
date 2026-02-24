@@ -5,9 +5,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>高品質讀書會 | 典藏影音庫</title>
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="讀書會">
+  <link rel="apple-touch-icon" href="icon.png">
   <link
     href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+TC:wght@300;500;700&family=Playfair+Display:ital@0;1&display=swap"
     rel="stylesheet">
+
   <style>
     :root {
       --gold: #D4AF37;
@@ -25,12 +31,93 @@
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+      /* 讓整體滾動更平滑 */
+    }
+
     body {
       background-color: var(--bg-dark);
       color: var(--text-main);
       font-family: 'Noto Serif TC', serif;
       overflow-x: hidden;
       line-height: 1.6;
+    }
+
+    /* --- 啟動畫面 (Splash Screen) --- */
+    #splash-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--bg-dark);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+      /* 改為俐落的 0.5 秒 */
+    }
+
+    .splash-content {
+      text-align: center;
+    }
+
+    .splash-logo {
+      font-family: 'Cinzel', serif;
+      font-size: 2.5rem;
+      color: var(--gold);
+      text-shadow: 0 0 20px var(--gold-glow);
+      margin-bottom: 30px;
+      letter-spacing: 2px;
+      animation: pulseGold 2s infinite alternate;
+    }
+
+    .splash-loader {
+      width: 100px;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.1);
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .splash-loader::after {
+      content: '';
+      position: absolute;
+      left: -50px;
+      width: 50px;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      animation: goldScan 1.2s infinite linear;
+    }
+
+    .splash-hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    @keyframes pulseGold {
+      0% {
+        opacity: 0.7;
+        transform: scale(0.98);
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(1.02);
+      }
+    }
+
+    @keyframes goldScan {
+      0% {
+        left: -50px;
+      }
+
+      100% {
+        left: 100%;
+      }
     }
 
     /* --- 背景星空動畫 Canvas --- */
@@ -63,7 +150,7 @@
       text-shadow: 0 0 20px var(--gold-glow);
       margin-bottom: 3rem;
       letter-spacing: 0.2em;
-      animation: fadeIn Down 1s ease-out;
+      animation: fadeInDown 1s ease-out;
     }
 
     .quote-card {
@@ -162,7 +249,7 @@
     .timeline-container {
       max-width: 1000px;
       margin: 0 auto;
-      padding: 0 20px 100px;
+      padding: 0 20px 40px;
       position: relative;
     }
 
@@ -200,11 +287,12 @@
     }
 
     .video-card:hover {
-      border-color: rgba(212, 175, 55, 0.5);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      border-color: rgba(212, 175, 55, 0.8);
+      box-shadow: 0 10px 40px rgba(212, 175, 55, 0.2);
+      transform: translateY(-3px);
+      /* 懸停時微幅上浮 */
     }
 
-    /* 特殊卡片樣式：年度總結 / 生日場 */
     .card-special {
       border: 1px solid var(--gold);
       box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
@@ -280,14 +368,65 @@
       color: #ccc;
     }
 
+    /* --- 滾動浮現動畫 (Scroll Reveal) --- */
+    .fade-in-element {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .fade-in-element.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* --- 未完待續區塊 --- */
+    .tbc-section {
+      text-align: center;
+      padding: 40px 20px 100px;
+      /* 增加上下空間 */
+      position: relative;
+    }
+
+    .tbc-text {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 2.8rem;
+      /* 字體大升級 */
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 8px;
+      /* 增加史詩感字距 */
+      text-shadow: 0 0 25px var(--gold-glow);
+    }
+
+    .tbc-eng {
+      font-family: 'Cinzel', serif;
+      font-size: 1.2rem;
+      color: var(--text-sub);
+      letter-spacing: 4px;
+      margin-top: 15px;
+    }
+
+    .tbc-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--gold);
+      border-radius: 50%;
+      margin: 25px auto 0;
+      box-shadow: 0 0 15px var(--gold);
+      animation: blink 1.5s infinite alternate;
+    }
+
     /* 動畫 Keyframes */
-    @keyframes fadeIn {
+    @keyframes fadeInDown {
       from {
         opacity: 0;
+        transform: translateY(-30px);
       }
 
       to {
         opacity: 1;
+        transform: translateY(0);
       }
     }
 
@@ -300,6 +439,18 @@
       to {
         opacity: 1;
         transform: translateY(0);
+      }
+    }
+
+    @keyframes blink {
+      0% {
+        opacity: 0.2;
+        transform: scale(0.8);
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(1.2);
       }
     }
 
@@ -320,11 +471,23 @@
       .year-text {
         font-size: 3rem;
       }
+
+      .tbc-text {
+        font-size: 2rem;
+        letter-spacing: 4px;
+      }
     }
   </style>
 </head>
 
 <body>
+
+  <div id="splash-screen">
+    <div class="splash-content">
+      <h1 class="splash-logo">Premium<br>Book Club</h1>
+      <div class="splash-loader"></div>
+    </div>
+  </div>
   <canvas id="canvas-bg"></canvas>
 
   <section class="hero-section">
@@ -339,13 +502,13 @@
         如果都不買，完了，你的認知就停在這裡。
       </p>
       <p class="quote-text">
-        所以<span class="quote-highlight">在不讀書都得買書</span>，看個書名都對你有幫助 Oh man~
+        所以在不讀書都得買書，看個書名都對你有幫助 Oh man~
       </p>
       <p class="quote-book">—— 比如《被討厭的勇氣》</p>
     </div>
   </section>
 
-  <section class="birthdays-container">
+  <section class="birthdays-container fade-in-element">
     <h2 class="section-header">🎂 讀書會成員生日 🎂</h2>
     <div class="birthday-grid">
       <div class="birthday-card">
@@ -370,10 +533,20 @@
   <div id="timeline" class="timeline-container">
   </div>
 
+  <div class="tbc-section fade-in-element">
+    <div class="tbc-text">未 完 待 續</div>
+    <div class="tbc-eng">TO BE CONTINUED...</div>
+    <div class="tbc-dot"></div>
+  </div>
   <script>
+    // 啟動畫面控制：載入完成後延遲 0.5 秒俐落淡出
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('splash-screen').classList.add('splash-hidden');
+      }, 500);
+    });
+
     // ================= 資料庫 =================
-    // 我已幫您提煉了每部影片的「一句話形容」，讓畫面更豐富。
-    // 您可以隨時修改 'desc' 欄位的文字。
     const videos = [
       { date: '2024-12-14', type: 'list', id: 'PLtb0PhW5ohcUKP8HWwwY4b98ApRSPvyeq', title: '高品質讀書會：啟程', desc: '探索未知的知識領域，重新定義閱讀的意義，為我們的成長之旅揭開序幕。' },
       { date: '2025-01-18', type: 'list', id: 'PLtb0PhW5ohcU5rNTnr8iBqWUT0P3b5ai_', title: '高品質讀書會：一月號', desc: '新的一年，從重塑原子習慣開始，探討如何在細微處建立巨大的影響力。' },
@@ -390,26 +563,39 @@
       { date: '2026-01-25', type: 'list', id: 'PLtb0PhW5ohcUpojNZU-iqO6rRnAM77RDB', title: '高品質讀書會：2026 開年', desc: '展望 2026，設定全新目標，用系統化思維構建未來的成功藍圖。' }
     ];
 
+    // ================= 滾動監聽器 (Intersection Observer) =================
+    const scrollObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          scrollObserver.unobserve(entry.target); // 動畫只觸發一次
+        }
+      });
+    }, {
+      threshold: 0.15, // 元素露出 15% 時觸發
+      rootMargin: "0px 0px -50px 0px" // 提早一點點觸發
+    });
+
     // ================= 渲染邏輯 =================
     const timeline = document.getElementById('timeline');
 
-    // 1. 確保照日期排序
+    // 確保照日期排序
     videos.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-    // 2. 按年份分組渲染
     let currentYear = '';
 
     videos.forEach(v => {
       const videoYear = v.date.split('-')[0];
       const videoDate = v.date.replace(/-/g, ' / ');
 
-      // 如果年份改變，插入年份標題
+      // 如果年份改變，插入年份大標題
       if (videoYear !== currentYear) {
         currentYear = videoYear;
         const yearDiv = document.createElement('div');
-        yearDiv.className = 'year-separator';
+        yearDiv.className = 'year-separator fade-in-element'; // 加入動畫 class
         yearDiv.innerHTML = `<div class="year-text">${currentYear}</div>`;
         timeline.appendChild(yearDiv);
+        scrollObserver.observe(yearDiv); // 監聽年份標題
       }
 
       // 處理標籤與特殊樣式
@@ -426,17 +612,17 @@
         tags += `<span class="v-tag tag-normal">Book Club</span>`;
       }
 
-      // 處理影片連結 (Playlists vs Single Video)
       const embedUrl = v.type === 'video'
         ? `https://www.youtube.com/embed/${v.id}`
         : `https://www.youtube.com/embed/videoseries?list=${v.id}`;
 
-      // 建立卡片
       const card = document.createElement('div');
-      card.className = `video-card ${specialClass}`;
+      card.className = `video-card ${specialClass} fade-in-element`; // 加入動畫 class
+
+      // ★ 加入 loading="lazy" 大幅優化效能
       card.innerHTML = `
                 <div class="video-wrapper">
-                    <iframe src="${embedUrl}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <iframe src="${embedUrl}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </div>
                 <div class="content-wrapper">
                     <div class="v-date">${videoDate}</div>
@@ -446,7 +632,11 @@
                 </div>
             `;
       timeline.appendChild(card);
+      scrollObserver.observe(card); // 監聽影片卡片
     });
+
+    // 監聽原有的 HTML 元素
+    document.querySelectorAll('.fade-in-element').forEach(el => scrollObserver.observe(el));
 
     // ================= 背景動畫 (星空) =================
     const canvas = document.getElementById('canvas-bg');
