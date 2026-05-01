@@ -574,6 +574,7 @@
     <div class="tbc-eng">TO BE CONTINUED...</div>
     <div class="tbc-dot"></div>
   </div>
+
   <script>
     // 啟動畫面控制：載入完成後延遲 0.5 秒俐落淡出
     window.addEventListener('load', () => {
@@ -598,7 +599,8 @@
       { date: '2025-12-28', type: 'list', id: 'PLtb0PhW5ohcVo3EoYExZAxZuCbyK967wv', title: '2025 年度大總結', desc: '回首這一年，我們讀過了什麼？改變了什麼？一場含金量最高的年度復盤大會。', isSummary: true },
       { date: '2026-01-25', type: 'list', id: 'PLtb0PhW5ohcUpojNZU-iqO6rRnAM77RDB', title: '高品質讀書會：2026 開年', desc: '展望 2026，設定全新目標，用系統化思維構建未來的成功藍圖。' },
       { date: '2026-03-01', type: 'list', id: 'PLJ6UBlkVxVehfbPMFiKi0uXRrHo50O6wc', title: '高品質讀書會：二月號', desc: '2026 年二月份讀書會（於 3 月 1 日舉行）。在三月的開端齊聚，持續透過閱讀探索自我與世界的連結。' },
-      { date: '2026-03-29', type: 'list', id: 'PLJ6UBlkVxVegmJe_t6Fu1MIwktUCUeAGh', title: '高品質讀書會：三月號', desc: '阿如強勢回歸! 迎接第一季的尾聲，我們透過深度的交流與對話，持續拓展思維的邊界，為生活注入更多知識的養分。' }
+      { date: '2026-03-29', type: 'list', id: 'PLJ6UBlkVxVegmJe_t6Fu1MIwktUCUeAGh', title: '高品質讀書會：三月號', desc: '阿如強勢回歸! 迎接第一季的尾聲，我們透過深度的交流與對話，持續拓展思維的邊界，為生活注入更多知識的養分。' },
+      { date: '2026-04-29', type: 'list', id: 'PLJ6UBlkVxVegf0zsVFbY_n3Y2wXMVeHug', title: '高品質讀書會：四月號', desc: '彷彿是「吸引力法則」在悄悄運作，這個月大家心有靈犀，不約而同都挑選了探討「情緒」的書籍。讓我們一起向內探索，學習與真實的自己好好共處。' }
     ];
 
     // ================= 滾動監聽器 (Intersection Observer) =================
@@ -667,21 +669,21 @@
 
       // ★ 加入另開清單頁面的按鈕
       card.innerHTML = `
-                <div class="video-wrapper">
-                    <iframe src="${embedUrl}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div class="video-wrapper">
+            <iframe src="${embedUrl}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="content-wrapper">
+            <div class="v-date">${videoDate}</div>
+            <h3 class="v-title">${v.title}</h3>
+            <p class="v-desc">${v.desc}</p>
+            <div style="margin-top:auto;">
+                <div class="link-group">
+                    <div>${tags}</div>
+                    <a href="${watchUrl}" target="_blank" class="yt-link-btn">${btnText}</a>
                 </div>
-                <div class="content-wrapper">
-                    <div class="v-date">${videoDate}</div>
-                    <h3 class="v-title">${v.title}</h3>
-                    <p class="v-desc">${v.desc}</p>
-                    <div style="margin-top:auto;">
-                        <div class="link-group">
-                            <div>${tags}</div>
-                            <a href="${watchUrl}" target="_blank" class="yt-link-btn">${btnText}</a>
-                        </div>
-                    </div>
-                </div>
-            `;
+            </div>
+        </div>
+      `;
       timeline.appendChild(card);
       scrollObserver.observe(card); // 監聽影片卡片
     });
