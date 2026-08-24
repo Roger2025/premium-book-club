@@ -268,8 +268,15 @@
         margin: 0 auto;
         display: flex;
         justify-content: center;
-        gap: 15px;
+        gap: 12px;
         flex-wrap: wrap;
+        /* 隱藏原生捲軸但保留滾動功能 */
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      .year-nav-container::-webkit-scrollbar {
+        display: none;
       }
 
       .nav-btn {
@@ -283,6 +290,8 @@
         font-size: 1rem;
         letter-spacing: 2px;
         transition: all 0.3s ease;
+        white-space: nowrap; /* 確保按鈕文字不換行 */
+        flex-shrink: 0; /* 確保按鈕在手機上不會被擠壓變形 */
       }
 
       .nav-btn:hover {
@@ -392,7 +401,7 @@
       @media (min-width: 768px) {
         .video-card {
           flex-direction: row;
-          /* 修正：將 height 改為 min-height，讓卡片可以隨長篇文字長高 */
+          /* 確保卡片可以隨內容高度伸展 */
           min-height: 300px;
         }
       }
@@ -448,7 +457,6 @@
         font-size: 0.95rem;
         color: #aaa;
         margin-bottom: 15px;
-        /* 修正：移除了限制 4 行的 CSS，現在不管字數多少都能完整顯示了 */
         line-height: 1.6;
       }
 
@@ -647,8 +655,19 @@
         .yt-link-btn {
           align-self: flex-end;
         }
+
+        /* 針對手機版導覽列的修正：改為橫向滑動 */
+        .year-nav-wrapper {
+          padding: 12px 15px;
+        }
+        .year-nav-container {
+          justify-content: flex-start; /* 靠左對齊，讓滑動感覺更自然 */
+          flex-wrap: nowrap; /* 禁止換行 */
+          overflow-x: auto; /* 開啟橫向滾動 */
+          -webkit-overflow-scrolling: touch; /* iOS 順滑滾動支援 */
+        }
         .nav-btn {
-          padding: 6px 16px;
+          padding: 6px 18px;
           font-size: 0.9rem;
         }
       }
@@ -915,7 +934,7 @@
           isSolo: true,
         },
         {
-          date: "2026-08-26",
+          date: "2026-08-23",
           type: "list",
           id: "PLU77Q9rVPp0A",
           title: "高品質讀書會：八月號",
