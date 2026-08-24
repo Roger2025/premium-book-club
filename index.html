@@ -195,14 +195,14 @@
         transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
       }
 
-      /* 滑鼠懸停時的浮起與金光效果 */
+      /* 滑鼠懸停時的浮起與金光效果 (加上 !important 避免被動畫覆蓋) */
       .quote-card:hover {
-        border-color: var(--gold);
-        transform: translateY(-8px);
+        border-color: var(--gold) !important;
+        transform: translateY(-8px) !important;
         box-shadow:
           0 15px 40px rgba(0, 0, 0, 0.5),
-          0 0 25px var(--gold-glow);
-        background: rgba(255, 255, 255, 0.05);
+          0 0 25px var(--gold-glow) !important;
+        background: rgba(255, 255, 255, 0.05) !important;
       }
 
       /* 第二張卡片延遲出現 */
@@ -353,11 +353,12 @@
         transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
       }
 
+      /* 滑鼠懸停時的浮起與金光效果 (加上 !important) */
       .birthday-card:hover {
-        border-color: var(--gold);
-        transform: translateY(-8px);
-        box-shadow: 0 10px 25px var(--gold-glow);
-        background: rgba(255, 255, 255, 0.08);
+        border-color: var(--gold) !important;
+        transform: translateY(-8px) !important;
+        box-shadow: 0 10px 25px var(--gold-glow) !important;
+        background: rgba(255, 255, 255, 0.08) !important;
       }
 
       .b-name {
@@ -416,9 +417,9 @@
       }
 
       .video-card:hover {
-        border-color: rgba(212, 175, 55, 0.8);
-        box-shadow: 0 10px 40px rgba(212, 175, 55, 0.2);
-        transform: translateY(-3px);
+        border-color: rgba(212, 175, 55, 0.8) !important;
+        box-shadow: 0 10px 40px rgba(212, 175, 55, 0.2) !important;
+        transform: translateY(-3px) !important;
       }
 
       .card-special {
@@ -670,10 +671,10 @@
           padding: 12px 15px;
         }
         .year-nav-container {
-          justify-content: flex-start; /* 靠左對齊，讓滑動感覺更自然 */
-          flex-wrap: nowrap; /* 禁止換行 */
-          overflow-x: auto; /* 開啟橫向滾動 */
-          -webkit-overflow-scrolling: touch; /* iOS 順滑滾動支援 */
+          justify-content: flex-start;
+          flex-wrap: nowrap;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
         }
         .nav-btn {
           padding: 6px 18px;
@@ -1079,7 +1080,7 @@
         });
 
         // 點擊後平滑滾動到導覽列位置 (讓使用者剛好可以從新內容最上方開始看)
-        if (clickedBtn) {
+        if (clickedBtn && filterYear !== "all") {
           const anchor = document.getElementById("nav-anchor");
           const offset =
             anchor.getBoundingClientRect().top + window.scrollY - 10;
@@ -1089,7 +1090,8 @@
 
       // 初始化頁面
       buildNav();
-      filterTimeline("all", null);
+      // 修正：初始化時確實抓取第一個按鈕("全部")讓它亮起
+      filterTimeline("all", document.querySelector(".nav-btn"));
 
       // 處理所有現存的 fade-in-element (針對非動態生成的部分)
       document
