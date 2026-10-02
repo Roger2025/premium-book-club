@@ -181,33 +181,40 @@
         align-items: center;
       }
 
+      .quote-card-wrapper {
+        width: 100%;
+        max-width: 800px;
+        animation: slideUp 1s ease-out both;
+      }
+
+      .quote-card-wrapper.delay-anim {
+        animation-delay: 0.4s;
+      }
+
       .quote-card {
         background: rgba(255, 255, 255, 0.03);
         border: 1px solid var(--glass-border);
         padding: 3rem;
         width: 100%;
-        max-width: 800px;
         position: relative;
         backdrop-filter: blur(10px);
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         border-radius: 8px;
-        animation: slideUp 1s ease-out both;
-        transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        transition:
+          transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+          border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+          box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+          background-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        will-change: transform, box-shadow, border-color, background-color;
       }
 
-      /* 滑鼠懸停時的浮起與金光效果 (加上 !important 避免被動畫覆蓋) */
       .quote-card:hover {
-        border-color: var(--gold) !important;
-        transform: translateY(-8px) !important;
+        border-color: var(--gold);
+        transform: translateY(-8px);
         box-shadow:
-          0 15px 40px rgba(0, 0, 0, 0.5),
-          0 0 25px var(--gold-glow) !important;
-        background: rgba(255, 255, 255, 0.05) !important;
-      }
-
-      /* 第二張卡片延遲出現 */
-      .quote-card.delay-anim {
-        animation-delay: 0.4s;
+          0 20px 45px rgba(0, 0, 0, 0.6),
+          0 0 35px var(--gold-glow);
+        background: rgba(255, 255, 255, 0.06);
       }
 
       .quote-card::before {
@@ -229,7 +236,6 @@
         font-weight: 300;
       }
 
-      /* 命運：血紅色 */
       .highlight-fate {
         color: var(--blood-red);
         font-size: 1.4em;
@@ -240,7 +246,6 @@
         transform: translateY(2px);
       }
 
-      /* 即見如來：金光色 */
       .highlight-gold {
         color: var(--gold);
         font-size: 1.4em;
@@ -279,7 +284,6 @@
         justify-content: center;
         gap: 12px;
         flex-wrap: wrap;
-        /* 隱藏原生捲軸但保留滾動功能 */
         -ms-overflow-style: none;
         scrollbar-width: none;
       }
@@ -298,15 +302,16 @@
         font-family: "Cinzel", "Noto Serif TC", serif;
         font-size: 1rem;
         letter-spacing: 2px;
-        transition: all 0.3s ease;
-        white-space: nowrap; /* 確保按鈕文字不換行 */
-        flex-shrink: 0; /* 確保按鈕在手機上不會被擠壓變形 */
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        white-space: nowrap;
+        flex-shrink: 0;
       }
 
       .nav-btn:hover {
         background: rgba(212, 175, 55, 0.2);
         border-color: var(--gold);
         color: var(--gold);
+        transform: translateY(-2px);
       }
 
       .nav-btn.active {
@@ -350,15 +355,19 @@
         border: 1px solid var(--glass-border);
         padding: 1.5rem;
         border-radius: 12px;
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        transition:
+          transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+          border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+          box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+          background 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        will-change: transform, box-shadow, border-color;
       }
 
-      /* 滑鼠懸停時的浮起與金光效果 (加上 !important) */
       .birthday-card:hover {
-        border-color: var(--gold) !important;
-        transform: translateY(-8px) !important;
-        box-shadow: 0 10px 25px var(--gold-glow) !important;
-        background: rgba(255, 255, 255, 0.08) !important;
+        border-color: var(--gold);
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 12px 30px var(--gold-glow);
+        background: rgba(255, 255, 255, 0.08);
       }
 
       .b-name {
@@ -404,22 +413,29 @@
         border-radius: 16px;
         overflow: hidden;
         margin-bottom: 40px;
-        transition: all 0.4s ease;
+        transition:
+          transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+          border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+          box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+          background-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         position: relative;
+        will-change: transform, box-shadow, border-color;
       }
 
       @media (min-width: 768px) {
         .video-card {
           flex-direction: row;
-          /* 確保卡片可以隨內容高度伸展 */
           min-height: 300px;
         }
       }
 
       .video-card:hover {
-        border-color: rgba(212, 175, 55, 0.8) !important;
-        box-shadow: 0 10px 40px rgba(212, 175, 55, 0.2) !important;
-        transform: translateY(-3px) !important;
+        border-color: var(--gold);
+        box-shadow:
+          0 20px 50px rgba(0, 0, 0, 0.7),
+          0 0 35px var(--gold-glow);
+        transform: translateY(-8px) scale(1.01);
+        background: rgba(25, 25, 25, 0.85);
       }
 
       .card-special {
@@ -510,7 +526,7 @@
         border-radius: 20px;
         cursor: pointer;
         font-size: 0.8rem;
-        transition: all 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         display: flex;
         align-items: center;
         gap: 4px;
@@ -521,6 +537,7 @@
         background: rgba(255, 255, 255, 0.15);
         color: #fff;
         border-color: #fff;
+        transform: translateY(-1px);
       }
       .copy-btn.copied {
         background: rgba(46, 204, 113, 0.2);
@@ -547,7 +564,7 @@
         font-size: 0.8rem;
         font-weight: bold;
         font-family: "Noto Serif TC", serif;
-        transition: all 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         text-decoration: none;
         display: inline-flex;
         align-items: center;
@@ -557,7 +574,8 @@
       .yt-link-btn:hover {
         background: var(--gold);
         color: #000;
-        box-shadow: 0 0 10px var(--gold-glow);
+        box-shadow: 0 0 15px var(--gold-glow);
+        transform: translateY(-2px);
       }
 
       /* --- 滾動浮現動畫 --- */
@@ -666,7 +684,6 @@
           align-self: flex-end;
         }
 
-        /* 針對手機版導覽列的修正：改為橫向滑動 */
         .year-nav-wrapper {
           padding: 12px 15px;
         }
@@ -698,23 +715,27 @@
       <h1 class="main-title">Premium Book Club ⭐</h1>
 
       <div class="quotes-container">
-        <!-- 第一張：榮格 -->
-        <div class="quote-card">
-          <p class="jung-quote">
-            如果你無法意識到無意識，<br />
-            而無意識就在操縱你，<br />
-            而你就稱之為 <span class="highlight-fate">命運</span>。
-          </p>
-          <p class="quote-book">—— 卡爾·榮格 (Carl Jung)</p>
+        <!-- 第一張：榮格 (使用獨立動畫外層包裹) -->
+        <div class="quote-card-wrapper">
+          <div class="quote-card">
+            <p class="jung-quote">
+              如果你無法意識到無意識，<br />
+              而無意識就在操縱你，<br />
+              而你就稱之為 <span class="highlight-fate">命運</span>。
+            </p>
+            <p class="quote-book">—— 卡爾·榮格 (Carl Jung)</p>
+          </div>
         </div>
 
-        <!-- 第二張：金剛經 -->
-        <div class="quote-card delay-anim">
-          <p class="jung-quote">
-            凡所有相，皆是虛妄。<br />
-            若見諸相非相，<span class="highlight-gold">即見如來</span>。
-          </p>
-          <p class="quote-book">—— 《金剛經》</p>
+        <!-- 第二張：金剛經 (使用獨立動畫外層包裹) -->
+        <div class="quote-card-wrapper delay-anim">
+          <div class="quote-card">
+            <p class="jung-quote">
+              凡所有相，皆是虛妄。<br />
+              若見諸相非相，<span class="highlight-gold">即見如來</span>。
+            </p>
+            <p class="quote-book">—— 《金剛經》</p>
+          </div>
         </div>
       </div>
     </section>
@@ -948,7 +969,14 @@
           type: "list",
           id: "PLU77Q9rVPp0A",
           title: "高品質讀書會：八月號",
-          desc: "一場震撼靈魂的深度碰撞！本月我們拆解伊隆·馬斯克（Elon Musk）近乎瘋狂的創業血淚史，看他如何在破產邊緣與絕望中，憑藉鋼鐵般的意志撕裂現實，締造改寫人類文明的偉業。與此同時，我們將目光轉向內在，深度剖析「自我、小我、高我、無我」四個維度的精神蛻變。這不僅是一次對商業巨頭的仰望，更是一場直指人心的靈魂拷問——在浩瀚的宇宙與短暫的生命中，我們該如何粉碎虛妄的自我，觸摸那至高無上的精神境界？",
+          desc: "一場震撼靈魂的深度碰撞！本月我們拆解伊隆·馬斯克（Elon Musk）近乎瘋狂的創業血淚史，看他如何在破產邊緣與絕望中，憑藉鋼鐵般的意志撕裂現實，締造改寫人類文明的偉業。與此同時，我們將目光轉向內在，深度剖析「自我、小我、高我、無我」四個維度的精神蛻變。這不僅是一次對商業巨頭的仰望，更是一場直指人心的靈魂拷問——在浩瀚的宇宙與短暫的生命中，我們該如何粉碎虛妄的自我，觸摸那至高無上精神境界？",
+        },
+        {
+          date: "2026-09-30",
+          type: "list",
+          id: "PLJrIKjuVCHZY",
+          title: "高品質讀書會：九月號",
+          desc: "本月我們深入探討《價值投資寶典》，學習運用宏觀經濟看透大環境趨勢，以微觀經濟與會計視角檢視公司體質，並嚴守「本益比低點買進」的價值投資心法。同時，我們也分享了「Let them」法則——在面對外在紛擾與不可控的人事物時，學會「隨它們去」的豁達，並展現「由我來」的積極與承擔，不僅在市場中保持理性，更在人生中找回心靈的平靜與絕對主導權。",
         },
       ];
 
@@ -1090,7 +1118,6 @@
 
       // 初始化頁面
       buildNav();
-      // 修正：初始化時確實抓取第一個按鈕("全部")讓它亮起
       filterTimeline("all", document.querySelector(".nav-btn"));
 
       // 處理所有現存的 fade-in-element (針對非動態生成的部分)
