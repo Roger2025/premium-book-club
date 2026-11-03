@@ -191,6 +191,10 @@
         animation-delay: 0.4s;
       }
 
+      .quote-card-wrapper.delay-anim-2 {
+        animation-delay: 0.8s;
+      }
+
       .quote-card {
         background: rgba(255, 255, 255, 0.03);
         border: 1px solid var(--glass-border);
@@ -715,8 +719,18 @@
       <h1 class="main-title">Premium Book Club ⭐</h1>
 
       <div class="quotes-container">
-        <!-- 第一張：榮格 (使用獨立動畫外層包裹) -->
+        <!-- 第一張：勇氣名言 (新增於最上方) -->
         <div class="quote-card-wrapper">
+          <div class="quote-card">
+            <p class="jung-quote">
+              勇氣並非無懼，<br />
+              而是面對恐懼，並願意<span class="highlight-gold">做出行動</span>。
+            </p>
+          </div>
+        </div>
+
+        <!-- 第二張：榮格 (使用獨立動畫外層包裹) -->
+        <div class="quote-card-wrapper delay-anim">
           <div class="quote-card">
             <p class="jung-quote">
               如果你無法意識到無意識，<br />
@@ -727,8 +741,8 @@
           </div>
         </div>
 
-        <!-- 第二張：金剛經 (使用獨立動畫外層包裹) -->
-        <div class="quote-card-wrapper delay-anim">
+        <!-- 第三張：金剛經 (使用獨立動畫外層包裹) -->
+        <div class="quote-card-wrapper delay-anim-2">
           <div class="quote-card">
             <p class="jung-quote">
               凡所有相，皆是虛妄。<br />
